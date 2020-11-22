@@ -1,4 +1,4 @@
-require('dotenv-safe').config();
+require('dotenv-safe').config(); // importa as variaveis de ambiente do arquivo .env
 
 const express = require("express")
 const bodyParser = require("body-parser")
@@ -12,6 +12,7 @@ mongoose.connect(process.env.MONGODB_URL, {
   useUnifiedTopology: true
 });
 
+//console.log(process.env)
 //Conexão com o mongo
 let db = mongoose.connection;
 

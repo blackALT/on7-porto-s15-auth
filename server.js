@@ -1,4 +1,5 @@
 const app = require("./src/app");
+require('dotenv-safe').config();
 const port = process.env.PORT;
 
 app.listen(port, () => {

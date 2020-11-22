@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const SECRET = process.env.SECRET;
 
 const create = (req, res) => {
-  const senhaComHash = bcrypt.hashSync(req.body.senha, 10);
+  const senhaComHash = bcrypt.hashSync(req.body.senha, 10); // Gerar o hash de senha e substituir pela senha passada pelo usuario
   req.body.senha = senhaComHash;
   const colaboradora = new Colaboradoras(req.body);
 
@@ -13,7 +13,7 @@ const create = (req, res) => {
       res.status(500).send({ message: err.message })
     }
 
-    res.status(201).send(colaboradora.toJSON())
+    res.status(201).send(colaboradora)
   })
 };
 
@@ -32,7 +32,7 @@ const login = (req, res) => {
       return res.status(404).send(`Não existe colaboradora com o email ${req.body.email}`);
     }
 
-    const senhaValida = bcrypt.compareSync(req.body.senha, colaboradora.senha);
+    const senhaValida = bcrypt.compareSync(req.body.senha, colaboradora.senha); //compara senha do body com senha do banco
 
     if (!senhaValida) {
       return res.status(403).send('que senha é essa hein');
