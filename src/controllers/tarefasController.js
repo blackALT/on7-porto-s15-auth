@@ -7,7 +7,7 @@ const getAll = (req, res) => {
   const authHeader = req.get('authorization');
 
   if (!authHeader) {
-    return res.status(401).send('Erro! Informe o Token.');
+    return res.status(401).send('Erro! Informe o Token');
   }
 
   const token = authHeader.split(' ')[1];
