@@ -28,8 +28,20 @@ const getAll = (req, res) => {
 
 const getById = (req, res) => {
   const id = req.params.id;
-  //Find sempre retorna uma lista
-  //FindOne retorna um unico documento
+
+  const authHeader = req.get('authorization');
+
+  if (!authHeader) {
+    return res.status(401).send('Kd os header parça');
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  jwt.verify(token, SECRET, function(erro) {
+    if (erro) {
+      return res.status(403).send('Nope');
+    }
+
   tarefas.find({ id }, function(err, tarefas){
     if(err) {
       res.status(500).send({ message: err.message })
@@ -37,9 +49,23 @@ const getById = (req, res) => {
 
     res.status(200).send(tarefas);
   })
+  });
 };
 
 const postTarefa = (req, res) => {
+  const authHeader = req.get('authorization');
+
+  if (!authHeader) {
+    return res.status(401).send('Kd os header parça');
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  jwt.verify(token, SECRET, function(erro) {
+    if (erro) {
+      return res.status(403).send('Nope');
+    }
+
   console.log(req.body)
 
   let tarefa = new tarefas(req.body)
@@ -50,14 +76,24 @@ const postTarefa = (req, res) => {
     }
     res.status(201).send(tarefa.toJSON())
   })
-
+});
 };
 
 const deleteTarefa = (req, res) => {
   const id = req.params.id;
+  const authHeader = req.get('authorization');
 
-  //deleteMany remove mais de um registro
-  //deleteOne remove apenas um registro
+  if (!authHeader) {
+    return res.status(401).send('Kd os header parça');
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  jwt.verify(token, SECRET, function(erro) {
+    if (erro) {
+      return res.status(403).send('Nope');
+    }
+
   tarefas.find({ id }, function(err, tarefa){
     if(tarefa.length > 0){
       tarefas.deleteMany({ id }, function(err){
@@ -79,10 +115,23 @@ const deleteTarefa = (req, res) => {
       })
     }
   })
+});
 };
 
 const deleteTarefaConcluida = (req, res) => {
-  //Deleta quando concluido = true
+ 
+  const authHeader = req.get('authorization');
+
+  if (!authHeader) {
+    return res.status(401).send('Kd os header parça');
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  jwt.verify(token, SECRET, function(erro) {
+    if (erro) {
+      return res.status(403).send('Nope');
+    }
   try {
     tarefas.deleteMany({ concluido: true }, function (err) {
         if (!err) {
@@ -93,18 +142,26 @@ const deleteTarefaConcluida = (req, res) => {
     console.log(err)
     return res.status(424).send({ message: err.message })
   }
+});
 }
 
 const putTarefa = (req, res) => {
   const id = req.params.id;
+  const authHeader = req.get('authorization');
+
+  if (!authHeader) {
+    return res.status(401).send('Kd os header parça');
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  jwt.verify(token, SECRET, function(erro) {
+    if (erro) {
+      return res.status(403).send('Nope');
+    }
 
   tarefas.find({ id }, function(err, tarefa){
     if(tarefa.length> 0){
-      //faz o update apenas para quem respeitar o id passado no parametro
-      // set são os valores que serão atualizados
-      //UpdateMany atualiza vários registros de uma unica vez
-      //UpdateOne atualiza um único registro por vez
-
       tarefas.updateMany({ id }, { $set : req.body }, function (err) {
         if (err) {
           res.status(500).send({ message: err.message })
@@ -114,8 +171,8 @@ const putTarefa = (req, res) => {
     }else {
       res.status(200).send({ message: "Não há registros para serem atualizados com esse id"})
     }
-  })
-
+    })
+  });
 }
 
 module.exports = {
